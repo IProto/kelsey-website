@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sunset Ridge Retreat — Your Private Escape in the Hills</title>
+  <meta name="description" content="A modern hilltop retreat with panoramic valley views in Oregon's Willamette Valley wine country. Sleeps 6 guests in comfort." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons (lightweight) -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Announcement Banner ─────────────────────────────── -->
+  <div id="banner" class="banner" hidden>
+    <div class="banner__inner">
+      <span id="banner-message" class="banner__text"></span>
+      <a id="banner-link" class="banner__link" href="#" target="_blank" rel="noopener"></a>
+      <button id="banner-close" class="banner__close" aria-label="Dismiss banner">
+        <i data-lucide="x" class="icon-sm"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Navigation ──────────────────────────────────────── -->
+  <header id="site-header" class="header">
+    <nav class="nav container">
+      <a href="#hero" class="nav__logo" id="nav-logo"></a>
+      <button id="nav-toggle" class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span class="nav__toggle-bar"></span>
+        <span class="nav__toggle-bar"></span>
+        <span class="nav__toggle-bar"></span>
+      </button>
+      <ul id="nav-menu" class="nav__menu">
+        <li><a href="#about" class="nav__link">About</a></li>
+        <li><a href="#gallery" class="nav__link">Gallery</a></li>
+        <li><a href="#amenities" class="nav__link">Amenities</a></li>
+        <li><a href="#location" class="nav__link">Location</a></li>
+        <li><a href="#reviews" class="nav__link">Reviews</a></li>
+        <li><a href="#contact" class="nav__link nav__link--cta">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ── Hero ────────────────────────────────────────────── -->
+  <section id="hero" class="hero">
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <h1 id="hero-headline" class="hero__headline"></h1>
+      <p id="hero-subheadline" class="hero__subheadline"></p>
+      <a id="hero-cta" class="btn btn--primary btn--lg" href="#" target="_blank" rel="noopener"></a>
+    </div>
+    <div class="hero__scroll-indicator">
+      <i data-lucide="chevron-down" class="icon-bounce"></i>
+    </div>
+  </section>
+
+  <!-- ── About ───────────────────────────────────────────── -->
+  <section id="about" class="section about">
+    <div class="container about__grid">
+      <div class="about__text reveal">
+        <h2 id="about-title" class="section__title"></h2>
+        <div id="about-paragraphs" class="about__description"></div>
+        <div id="about-highlights" class="about__highlights"></div>
+      </div>
+      <div class="about__image-wrap reveal reveal--right">
+        <img id="about-image" class="about__image" src="" alt="Property exterior" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Gallery ─────────────────────────────────────────── -->
+  <section id="gallery" class="section section--alt gallery">
+    <div class="container">
+      <h2 id="gallery-title" class="section__title section__title--center reveal"></h2>
+      <div id="gallery-grid" class="gallery__grid"></div>
+    </div>
+  </section>
+
+  <!-- ── Lightbox Modal ──────────────────────────────────── -->
+  <div id="lightbox" class="lightbox" hidden>
+    <div class="lightbox__overlay"></div>
+    <button class="lightbox__close" aria-label="Close lightbox"><i data-lucide="x"></i></button>
+    <button class="lightbox__prev" aria-label="Previous photo"><i data-lucide="chevron-left"></i></button>
+    <img id="lightbox-img" class="lightbox__img" src="" alt="" />
+    <button class="lightbox__next" aria-label="Next photo"><i data-lucide="chevron-right"></i></button>
+    <p id="lightbox-caption" class="lightbox__caption"></p>
+  </div>
+
+  <!-- ── Amenities ───────────────────────────────────────── -->
+  <section id="amenities" class="section amenities">
+    <div class="container">
+      <h2 id="amenities-title" class="section__title section__title--center reveal"></h2>
+      <div id="amenities-grid" class="amenities__grid"></div>
+    </div>
+  </section>
+
+  <!-- ── Location ────────────────────────────────────────── -->
+  <section id="location" class="section section--alt location">
+    <div class="container location__grid">
+      <div class="location__info reveal">
+        <h2 id="location-title" class="section__title"></h2>
+        <p id="location-description" class="location__description"></p>
+        <ul id="location-attractions" class="location__attractions"></ul>
+      </div>
+      <div class="location__map reveal reveal--right">
+        <iframe id="location-map" class="location__iframe" title="Property location" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src=""></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Reviews ─────────────────────────────────────────── -->
+  <section id="reviews" class="section reviews">
+    <div class="container">
+      <h2 id="reviews-title" class="section__title section__title--center reveal"></h2>
+      <div id="reviews-rating" class="reviews__overall reveal"></div>
+      <div id="reviews-grid" class="reviews__grid"></div>
+    </div>
+  </section>
+
+  <!-- ── Contact ─────────────────────────────────────────── -->
+  <section id="contact" class="section section--alt contact">
+    <div class="container contact__grid">
+      <div class="contact__info reveal">
+        <h2 id="contact-title" class="section__title"></h2>
+        <p id="contact-description" class="contact__description"></p>
+        <div id="contact-details" class="contact__details"></div>
+      </div>
+      <div id="contact-form-wrap" class="contact__form-wrap reveal reveal--right"></div>
+    </div>
+  </section>
+
+  <!-- ── Footer ──────────────────────────────────────────── -->
+  <footer id="site-footer" class="footer">
+    <div class="container footer__inner">
+      <p id="footer-copyright" class="footer__copyright"></p>
+      <div id="footer-socials" class="footer__socials"></div>
+      <a href="#hero" class="footer__back-top" aria-label="Back to top">
+        <i data-lucide="arrow-up"></i>
+      </a>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="site-config.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
