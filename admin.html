@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Site Admin — Sunset Ridge Retreat</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    /* ── Reset & Base ────────────────────────────────── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg: #0F1117;
+      --bg-card: #1A1D27;
+      --bg-input: #12141C;
+      --border: #2A2D3A;
+      --border-focus: #6C63FF;
+      --text: #E8E8ED;
+      --text-muted: #8B8D9A;
+      --accent: #6C63FF;
+      --accent-hover: #7B73FF;
+      --success: #34D399;
+      --danger: #F87171;
+      --warning: #FBBF24;
+      --radius: 10px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html { font-family: var(--font); background: var(--bg); color: var(--text); }
+    body { min-height: 100vh; }
+
+    /* ── Layout ──────────────────────────────────────── */
+    .admin-header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .admin-header h1 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .admin-header h1 span { color: var(--accent); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .admin-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: calc(100vh - 57px);
+    }
+
+    /* ── Sidebar ─────────────────────────────────────── */
+    .sidebar {
+      background: var(--bg-card);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+    }
+    .sidebar-section {
+      padding: 0 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .sidebar-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 0 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 150ms;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: var(--font);
+    }
+    .sidebar-link:hover { background: rgba(108,99,255,0.08); color: var(--text); }
+    .sidebar-link.active { background: rgba(108,99,255,0.15); color: var(--accent); }
+    .sidebar-link svg { width: 18px; height: 18px; }
+
+    /* ── Main Content ────────────────────────────────── */
+    .main-content {
+      padding: 2rem 2.5rem;
+      max-width: 900px;
+      overflow-y: auto;
+    }
+    .main-content h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .main-content .section-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── Form Elements ───────────────────────────────── */
+    .field {
+      margin-bottom: 1.25rem;
+    }
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+      color: var(--text-muted);
+    }
+    .field input[type="text"],
+    .field input[type="url"],
+    .field input[type="email"],
+    .field input[type="tel"],
+    .field textarea {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      background: var(--bg-input);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 0.9rem;
+      transition: border-color 200ms;
+      outline: none;
+    }
+    .field input:focus, .field textarea:focus {
+      border-color: var(--border-focus);
+    }
+    .field textarea { min-height: 80px; resize: vertical; }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    /* Switch toggle */
+    .switch-field {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .switch-field label { margin-bottom: 0; cursor: pointer; }
+    .switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: var(--border);
+      border-radius: 24px;
+      transition: 200ms;
+    }
+    .switch .slider::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: var(--text);
+      border-radius: 50%;
+      transition: 200ms;
+    }
+    .switch input:checked + .slider { background: var(--accent); }
+    .switch input:checked + .slider::before { transform: translateX(20px); }
+
+    /* ── Cards & Lists ───────────────────────────────── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .card-header h4 {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .card .remove-btn {
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+    }
+    .card .remove-btn:hover { background: rgba(248,113,113,0.1); }
+    .card .remove-btn svg { width: 16px; height: 16px; }
+
+    .add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1rem;
+      background: rgba(108,99,255,0.1);
+      border: 1.5px dashed var(--accent);
+      border-radius: var(--radius);
+      color: var(--accent);
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 150ms;
+    }
+    .add-btn:hover { background: rgba(108,99,255,0.2); }
+    .add-btn svg { width: 16px; height: 16px; }
+
+    /* ── Buttons ──────────────────────────────────────── */
+    .btn {
+      padding: 0.6rem 1.25rem;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 150ms;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn svg { width: 16px; height: 16px; }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+    .btn-danger {
+      background: rgba(248,113,113,0.1);
+      color: var(--danger);
+      border: 1px solid rgba(248,113,113,0.2);
+    }
+    .btn-danger:hover { background: rgba(248,113,113,0.2); }
+
+    /* ── Status / Toast ──────────────────────────────── */
+    .status-bar {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1000;
+      animation: slideUp 300ms ease;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .status-bar.show { display: flex; }
+    .status-bar.success { background: #064E3B; color: var(--success); border: 1px solid rgba(52,211,153,0.3); }
+    .status-bar.error { background: #450A0A; color: var(--danger); border: 1px solid rgba(248,113,113,0.3); }
+    .status-bar.saving { background: #1E1B4B; color: var(--accent); border: 1px solid rgba(108,99,255,0.3); }
+    .status-bar svg { width: 18px; height: 18px; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Setup Screen ────────────────────────────────── */
+    .setup-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .setup-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      max-width: 520px;
+      width: 100%;
+    }
+    .setup-card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+    .setup-card .setup-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    .setup-card .field { margin-bottom: 1rem; }
+    .setup-card .btn { width: 100%; justify-content: center; margin-top: 0.5rem; }
+    .setup-card .help-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
+    .setup-card .help-text a { color: var(--accent); text-decoration: underline; }
+    .setup-error {
+      background: rgba(248,113,113,0.1);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    /* ── Section panel visibility ─────────────────────── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── Gallery image previews ───────────────────────── */
+    .gallery-preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .gallery-preview-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+    }
+    .gallery-preview-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .gallery-preview-item .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(0,0,0,0.7);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Stars ────────────────────────────────────────── */
+    .star-rating {
+      display: flex;
+      gap: 2px;
+    }
+    .star-rating button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px;
+      color: var(--border);
+      transition: color 100ms;
+    }
+    .star-rating button.filled { color: #F5A623; }
+    .star-rating button svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* ── Responsive ──────────────────────────────────── */
+    @media (max-width: 768px) {
+      .admin-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .main-content { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Setup Screen (shown until token is configured) ── -->
+  <div id="setup-screen" class="setup-screen">
+    <div class="setup-card">
+      <h2>🔐 Connect to GitHub</h2>
+      <p class="setup-desc">
+        This admin panel saves changes directly to your GitHub repository,
+        which automatically publishes updates to your live site.
+      </p>
+      <div id="setup-error" class="setup-error"></div>
+      <div class="field">
+        <label for="setup-owner">Repository Owner</label>
+        <input type="text" id="setup-owner" value="IProto" />
+      </div>
+      <div class="field">
+        <label for="setup-repo">Repository Name</label>
+        <input type="text" id="setup-repo" value="kelsey-website" />
+      </div>
+      <div class="field">
+        <label for="setup-token">Personal Access Token</label>
+        <input type="text" id="setup-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+      </div>
+      <button class="btn btn-primary" id="setup-connect">
+        <i data-lucide="plug"></i> Connect
+      </button>
+      <p class="help-text">
+        You need a GitHub Personal Access Token with <strong>repo</strong> scope.
+        <a href="https://github.com/settings/tokens/new?description=kelsey-website-admin&scopes=repo" target="_blank">Create one here →</a><br />
+        The token is stored only in your browser's localStorage and never sent anywhere other than GitHub's API.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── Admin Panel (shown after auth) ──────────────── -->
+  <div id="admin-panel" style="display:none;">
+    <header class="admin-header">
+      <h1><i data-lucide="settings-2"></i> <span>Site Admin</span></h1>
+      <div class="header-actions">
+        <a id="view-site-link" href="#" target="_blank" class="btn btn-secondary">
+          <i data-lucide="external-link"></i> View Site
+        </a>
+        <button id="save-btn" class="btn btn-primary">
+          <i data-lucide="save"></i> Save & Deploy
+        </button>
+      </div>
+    </header>
+
+    <div class="admin-layout">
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-label">Content</div>
+          <button class="sidebar-link active" data-panel="panel-banner"><i data-lucide="megaphone"></i> Banner</button>
+          <button class="sidebar-link" data-panel="panel-hero"><i data-lucide="image"></i> Hero</button>
+          <button class="sidebar-link" data-panel="panel-about"><i data-lucide="info"></i> About</button>
+          <button class="sidebar-link" data-panel="panel-gallery"><i data-lucide="images"></i> Gallery</button>
+          <button class="sidebar-link" data-panel="panel-amenities"><i data-lucide="list-checks"></i> Amenities</button>
+          <button class="sidebar-link" data-panel="panel-location"><i data-lucide="map-pin"></i> Location</button>
+          <button class="sidebar-link" data-panel="panel-reviews"><i data-lucide="star"></i> Reviews</button>
+          <button class="sidebar-link" data-panel="panel-contact"><i data-lucide="mail"></i> Contact</button>
+          <button class="sidebar-link" data-panel="panel-footer"><i data-lucide="layout"></i> Footer</button>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-label">Settings</div>
+          <button class="sidebar-link" data-panel="panel-branding"><i data-lucide="palette"></i> Branding</button>
+          <button class="sidebar-link" id="disconnect-btn"><i data-lucide="log-out"></i> Disconnect</button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <!-- ── Branding Panel ──────────────── -->
+        <div id="panel-branding" class="panel">
+          <h2>Branding</h2>
+          <p class="section-desc">Property name and core identity.</p>
+          <div class="field">
+            <label for="branding-name">Property Name</label>
+            <input type="text" id="branding-name" />
+          </div>
+          <div class="field">
+            <label for="branding-tagline">Tagline</label>
+            <input type="text" id="branding-tagline" />
+          </div>
+        </div>
+
+        <!-- ── Banner Panel ────────────────── -->
+        <div id="panel-banner" class="panel active">
+          <h2>Announcement Banner</h2>
+          <p class="section-desc">Show a dismissible message at the top of the site for promotions or announcements.</p>
+          <div class="switch-field">
+            <label class="switch">
+              <input type="checkbox" id="banner-enabled" />
+              <span class="slider"></span>
+            </label>
+            <label for="banner-enabled">Banner enabled</label>
+          </div>
+          <div class="field">
+            <label for="banner-message">Message</label>
+            <input type="text" id="banner-message" />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="banner-linkText">Link Text</label>
+              <input type="text" id="banner-linkText" />
+            </div>
+            <div class="field">
+              <label for="banner-link">Link URL</label>
+              <input type="url" id="banner-link" />
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Hero Panel ──────────────────── -->
+        <div id="panel-hero" class="panel">
+          <h2>Hero Section</h2>
+          <p class="section-desc">The full-screen header area visitors see first.</p>
+          <div class="field">
+            <label for="hero-backgroundImage">Background Image URL</label>
+            <input type="url" id="hero-backgroundImage" />
+          </div>
+          <div class="field">
+            <label for="hero-headline">Headline</label>
+            <input type="text" id="hero-headline" />
+          </div>
+          <div class="field">
+            <label for="hero-subheadline">Subheadline</label>
+            <textarea id="hero-subheadline"></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="hero-ctaText">CTA Button Text</label>
+              <input type="text" id="hero-ctaText" />
+            </div>
+            <div class="field">
+              <label for="hero-ctaLink">CTA Button Link</label>
+              <input type="url" id="hero-ctaLink" />
+            </div>
+          </div>
+        </div>
+
+        <!-- ── About Panel ─────────────────── -->
+        <div id="panel-about" class="panel">
+          <h2>About Section</h2>
+          <p class="section-desc">Property description and key highlights.</p>
+          <div class="field">
+            <label for="about-title">Section Title</label>
+            <input type="text" id="about-title" />
+          </div>
+          <div class="field">
+            <label for="about-image">Image URL</label>
+            <input type="url" id="about-image" />
+          </div>
+          <div id="about-paragraphs-list"></div>
+          <button class="add-btn" id="add-about-paragraph">
+            <i data-lucide="plus"></i> Add Paragraph
+          </button>
+          <h3 style="margin:1.5rem 0 0.75rem;font-size:1rem;">Property Highlights</h3>
+          <div id="about-highlights-list"></div>
+          <button class="add-btn" id="add-about-highlight">
+            <i data-lucide="plus"></i> Add Highlight
+          </button>
+        </div>
+
+        <!-- ── Gallery Panel ───────────────── -->
+        <div id="panel-gallery" class="panel">
+          <h2>Photo Gallery</h2>
+          <p class="section-desc">Manage property photos. Use full URLs to images.</p>
+          <div class="field">
+            <label for="gallery-title">Section Title</label>
+            <input type="text" id="gallery-title" />
+          </div>
+          <div id="gallery-preview" class="gallery-preview"></div>
+          <div id="gallery-items-list"></div>
+          <button class="add-btn" id="add-gallery-item">
+            <i data-lucide="plus"></i> Add Photo
+          </button>
+        </div>
+
+        <!-- ── Amenities Panel ─────────────── -->
+        <div id="panel-amenities" class="panel">
+          <h2>Amenities</h2>
+          <p class="section-desc">Organize amenities into categories.</p>
+          <div class="field">
+            <label for="amenities-title">Section Title</label>
+            <input type="text" id="amenities-title" />
+          </div>
+          <div id="amenities-categories-list"></div>
+          <button class="add-btn" id="add-amenity-category">
+            <i data-lucide="plus"></i> Add Category
+          </button>
+        </div>
+
+        <!-- ── Location Panel ──────────────── -->
+        <div id="panel-location" class="panel">
+          <h2>Location</h2>
+          <p class="section-desc">Property location and nearby attractions.</p>
+          <div class="field">
+            <label for="location-title">Section Title</label>
+            <input type="text" id="location-title" />
+          </div>
+          <div class="field">
+            <label for="location-description">Description</label>
+            <textarea id="location-description"></textarea>
+          </div>
+          <div class="field">
+            <label for="location-mapEmbedUrl">Google Maps Embed URL</label>
+            <input type="url" id="location-mapEmbedUrl" />
+          </div>
+          <h3 style="margin:1.5rem 0 0.75rem;font-size:1rem;">Nearby Attractions</h3>
+          <div id="location-attractions-list"></div>
+          <button class="add-btn" id="add-location-attraction">
+            <i data-lucide="plus"></i> Add Attraction
+          </button>
+        </div>
+
+        <!-- ── Reviews Panel ───────────────── -->
+        <div id="panel-reviews" class="panel">
+          <h2>Guest Reviews</h2>
+          <p class="section-desc">Manage guest testimonials shown on the site.</p>
+          <div class="field-row">
+            <div class="field">
+              <label for="reviews-title">Section Title</label>
+              <input type="text" id="reviews-title" />
+            </div>
+            <div class="field">
+              <label for="reviews-averageRating">Average Rating</label>
+              <input type="text" id="reviews-averageRating" />
+            </div>
+          </div>
+          <div id="reviews-items-list"></div>
+          <button class="add-btn" id="add-review-item">
+            <i data-lucide="plus"></i> Add Review
+          </button>
+        </div>
+
+        <!-- ── Contact Panel ───────────────── -->
+        <div id="panel-contact" class="panel">
+          <h2>Contact Information</h2>
+          <p class="section-desc">How guests can reach you.</p>
+          <div class="field">
+            <label for="contact-title">Section Title</label>
+            <input type="text" id="contact-title" />
+          </div>
+          <div class="field">
+            <label for="contact-description">Description</label>
+            <textarea id="contact-description"></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="contact-email">Email</label>
+              <input type="email" id="contact-email" />
+            </div>
+            <div class="field">
+              <label for="contact-phone">Phone</label>
+              <input type="tel" id="contact-phone" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="contact-airbnbLink">Airbnb Listing URL</label>
+            <input type="url" id="contact-airbnbLink" />
+          </div>
+          <div class="switch-field">
+            <label class="switch">
+              <input type="checkbox" id="contact-formEnabled" />
+              <span class="slider"></span>
+            </label>
+            <label for="contact-formEnabled">Enable contact form</label>
+          </div>
+          <div class="field">
+            <label for="contact-formAction">Formspree Endpoint</label>
+            <input type="url" id="contact-formAction" />
+          </div>
+        </div>
+
+        <!-- ── Footer Panel ────────────────── -->
+        <div id="panel-footer" class="panel">
+          <h2>Footer</h2>
+          <p class="section-desc">Copyright text and social links.</p>
+          <div class="field">
+            <label for="footer-copyright">Copyright Text</label>
+            <input type="text" id="footer-copyright" />
+          </div>
+          <h3 style="margin:1rem 0 0.75rem;font-size:1rem;">Social Links</h3>
+          <div id="footer-socials-list"></div>
+          <button class="add-btn" id="add-footer-social">
+            <i data-lucide="plus"></i> Add Social Link
+          </button>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ── Status Toast ────────────────────────────────── -->
+  <div id="status-bar" class="status-bar"></div>
+
+  <script>
+    // ============================================================
+    // ADMIN PANEL — GitHub API-based CMS
+    // ============================================================
+
+    const STORAGE_KEY = 'kelsey-admin-auth';
+    const CONFIG_PATH = 'site-config.js';
+    let config = null;
+    let fileSha = null;
+
+    // ── Auth ──────────────────────────────────────────
+    function getAuth() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); }
+      catch { return null; }
+    }
+
+    function setAuth(owner, repo, token) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ owner, repo, token }));
+    }
+
+    function clearAuth() {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+
+    // ── GitHub API ────────────────────────────────────
+    async function githubFetch(path, options = {}) {
+      const auth = getAuth();
+      const url = `https://api.github.com/repos/${auth.owner}/${auth.repo}/${path}`;
+      const res = await fetch(url, {
+        ...options,
+        headers: {
+          'Authorization': `Bearer ${auth.token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+          ...(options.headers || {}),
+        },
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.message || `GitHub API error: ${res.status}`);
+      }
+      return res.json();
+    }
+
+    async function loadConfig() {
+      const data = await githubFetch(`contents/${CONFIG_PATH}?ref=main`);
+      fileSha = data.sha;
+      const content = atob(data.content.replace(/\n/g, ''));
+      // Parse the config from the JS file content
+      const match = content.match(/const\s+SITE_CONFIG\s*=\s*(\{[\s\S]*\});?\s*$/);
+      if (!match) throw new Error('Could not parse SITE_CONFIG from file');
+      // Use indirect eval to parse the object literal
+      config = (new Function(`return (${match[1]})`))();
+      return config;
+    }
+
+    async function saveConfig() {
+      const auth = getAuth();
+      const jsContent = `const SITE_CONFIG = ${JSON.stringify(config, null, 2)};\n`;
+      const encoded = btoa(unescape(encodeURIComponent(jsContent)));
+
+      const data = await githubFetch(`contents/${CONFIG_PATH}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          message: `Update site content via admin panel`,
+          content: encoded,
+          sha: fileSha,
+          branch: 'main',
+        }),
+      });
+      fileSha = data.content.sha;
+    }
+
+    // ── Toast Notifications ───────────────────────────
+    function showStatus(message, type = 'success', duration = 3000) {
+      const bar = document.getElementById('status-bar');
+      const icons = {
+        success: '<i data-lucide="check-circle"></i>',
+        error: '<i data-lucide="alert-circle"></i>',
+        saving: '<i data-lucide="loader"></i>',
+      };
+      bar.className = `status-bar show ${type}`;
+      bar.innerHTML = `${icons[type] || ''} ${message}`;
+      lucide.createIcons({ nodes: bar.querySelectorAll('[data-lucide]') });
+      if (duration > 0) {
+        setTimeout(() => { bar.classList.remove('show'); }, duration);
+      }
+    }
+
+    // ── Panel Navigation ──────────────────────────────
+    function initPanelNav() {
+      document.querySelectorAll('.sidebar-link[data-panel]').forEach(link => {
+        link.addEventListener('click', () => {
+          document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+          document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+          document.getElementById(link.dataset.panel).classList.add('active');
+        });
+      });
+    }
+
+    // ── Populate Fields from Config ───────────────────
+    function populateFields() {
+      if (!config) return;
+
+      // Branding
+      document.getElementById('branding-name').value = config.propertyName || '';
+      document.getElementById('branding-tagline').value = config.tagline || '';
+
+      // Banner
+      document.getElementById('banner-enabled').checked = config.banner?.enabled ?? false;
+      document.getElementById('banner-message').value = config.banner?.message || '';
+      document.getElementById('banner-linkText').value = config.banner?.linkText || '';
+      document.getElementById('banner-link').value = config.banner?.link || '';
+
+      // Hero
+      document.getElementById('hero-backgroundImage').value = config.hero?.backgroundImage || '';
+      document.getElementById('hero-headline').value = config.hero?.headline || '';
+      document.getElementById('hero-subheadline').value = config.hero?.subheadline || '';
+      document.getElementById('hero-ctaText').value = config.hero?.ctaText || '';
+      document.getElementById('hero-ctaLink').value = config.hero?.ctaLink || '';
+
+      // About
+      document.getElementById('about-title').value = config.about?.title || '';
+      document.getElementById('about-image').value = config.about?.image || '';
+      renderAboutParagraphs();
+      renderAboutHighlights();
+
+      // Gallery
+      document.getElementById('gallery-title').value = config.gallery?.title || '';
+      renderGalleryItems();
+
+      // Amenities
+      document.getElementById('amenities-title').value = config.amenities?.title || '';
+      renderAmenityCategories();
+
+      // Location
+      document.getElementById('location-title').value = config.location?.title || '';
+      document.getElementById('location-description').value = config.location?.description || '';
+      document.getElementById('location-mapEmbedUrl').value = config.location?.mapEmbedUrl || '';
+      renderLocationAttractions();
+
+      // Reviews
+      document.getElementById('reviews-title').value = config.reviews?.title || '';
+      document.getElementById('reviews-averageRating').value = config.reviews?.averageRating || '';
+      renderReviewItems();
+
+      // Contact
+      document.getElementById('contact-title').value = config.contact?.title || '';
+      document.getElementById('contact-description').value = config.contact?.description || '';
+      document.getElementById('contact-email').value = config.contact?.email || '';
+      document.getElementById('contact-phone').value = config.contact?.phone || '';
+      document.getElementById('contact-airbnbLink').value = config.contact?.airbnbLink || '';
+      document.getElementById('contact-formEnabled').checked = config.contact?.formEnabled ?? false;
+      document.getElementById('contact-formAction').value = config.contact?.formAction || '';
+
+      // Footer
+      document.getElementById('footer-copyright').value = config.footer?.copyright || '';
+      renderFooterSocials();
+    }
+
+    // ── Collect Fields into Config ────────────────────
+    function collectFields() {
+      config.propertyName = document.getElementById('branding-name').value;
+      config.tagline = document.getElementById('branding-tagline').value;
+
+      config.banner = {
+        enabled: document.getElementById('banner-enabled').checked,
+        message: document.getElementById('banner-message').value,
+        linkText: document.getElementById('banner-linkText').value,
+        link: document.getElementById('banner-link').value,
+      };
+
+      config.hero = {
+        backgroundImage: document.getElementById('hero-backgroundImage').value,
+        headline: document.getElementById('hero-headline').value,
+        subheadline: document.getElementById('hero-subheadline').value,
+        ctaText: document.getElementById('hero-ctaText').value,
+        ctaLink: document.getElementById('hero-ctaLink').value,
+      };
+
+      config.about = {
+        title: document.getElementById('about-title').value,
+        image: document.getElementById('about-image').value,
+        paragraphs: collectListItems('#about-paragraphs-list', '.para-input'),
+        highlights: collectAboutHighlights(),
+      };
+
+      config.gallery = {
+        title: document.getElementById('gallery-title').value,
+        images: collectGalleryItems(),
+      };
+
+      config.amenities = {
+        title: document.getElementById('amenities-title').value,
+        categories: collectAmenityCategories(),
+      };
+
+      config.location = {
+        title: document.getElementById('location-title').value,
+        description: document.getElementById('location-description').value,
+        mapEmbedUrl: document.getElementById('location-mapEmbedUrl').value,
+        nearbyAttractions: collectLocationAttractions(),
+      };
+
+      config.reviews = {
+        title: document.getElementById('reviews-title').value,
+        averageRating: parseFloat(document.getElementById('reviews-averageRating').value) || 0,
+        items: collectReviewItems(),
+      };
+
+      config.contact = {
+        title: document.getElementById('contact-title').value,
+        description: document.getElementById('contact-description').value,
+        email: document.getElementById('contact-email').value,
+        phone: document.getElementById('contact-phone').value,
+        airbnbLink: document.getElementById('contact-airbnbLink').value,
+        formEnabled: document.getElementById('contact-formEnabled').checked,
+        formAction: document.getElementById('contact-formAction').value,
+      };
+
+      config.footer = {
+        copyright: document.getElementById('footer-copyright').value,
+        socialLinks: collectFooterSocials(),
+      };
+    }
+
+    // ── Dynamic List Renderers ────────────────────────
+
+    // About paragraphs
+    function renderAboutParagraphs() {
+      const list = document.getElementById('about-paragraphs-list');
+      list.innerHTML = '';
+      (config.about?.paragraphs || []).forEach((text, i) => {
+        list.innerHTML += `
+          <div class="card" data-index="${i}">
+            <div class="card-header">
+              <h4>Paragraph ${i + 1}</h4>
+              <button class="remove-btn" onclick="removeAboutParagraph(${i})"><i data-lucide="trash-2"></i></button>
+            </div>
+            <div class="field">
+              <textarea class="para-input">${text}</textarea>
+            </div>
+          </div>`;
+      });
+      lucide.createIcons({ nodes: list.querySelectorAll('[data-lucide]') });
+    }
+    window.removeAboutParagraph = (i) => { config.about.paragraphs.splice(i, 1); renderAboutParagraphs(); };
+
+    function collectListItems(container, selector) {
+      return Array.from(document.querySelectorAll(`${container} ${selector}`)).map(el => el.value);
+    }
+
+    // About highlights
+    function renderAboutHighlights() {
+      const list = document.getElementById('about-highlights-list');
+      list.innerHTML = '';
+      (config.about?.highlights || []).forEach((h, i) => {
+        list.innerHTML += `
+          <div class="card" data-index="${i}">
+            <div class="card-header">
+              <h4>${h.label}</h4>
+              <button class="remove-btn" onclick="removeAboutHighlight(${i})"><i data-lucide="trash-2"></i></button>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Icon (bed, bath, wifi, users, car, paw)</label>
+                <input type="text" class="highlight-icon" value="${h.icon}" />
+              </div>
+              <div class="field">
+                <label>Label</label>
+                <input type="text" class="highlight-label" value="${h.label}" />
+              </div>
+            </div>
+          </div>`;
+      });
+      lucide.createIcons({ nodes: list.querySelectorAll('[data-lucide]') });
+    }
+    window.removeAboutHighlight = (i) => { config.about.highlights.splice(i, 1); renderAboutHighlights(); };
+
+    function collectAboutHighlights() {
+      const icons = document.querySelectorAll('#about-highlights-list .highlight-icon');
+      const labels = document.querySelectorAll('#about-highlights-list .highlight-label');
+      return Array.from(icons).map((el, i) => ({ icon: el.value, label: labels[i].value }));
+    }
+
+    // Gallery
+    function renderGalleryItems() {
+      const list = document.getElementById('gallery-items-list');
+      const preview = document.getElementById('gallery-preview');
+      list.innerHTML = '';
+      preview.innerHTML = '';
+      (config.gallery?.images || []).forEach((img, i) => {
+        preview.innerHTML += `
+          <div class="gallery-preview-item">
+            <img src="${img.src}" alt="${img.alt}" />
+            <button class="remove-btn" onclick="removeGalleryItem(${i})"><i data-lucide="x"></i></button>
+          </div>`;
+        list.innerHTML += `
+          <div class="card" data-index="${i}">
+            <div class="card-header">
+              <h4>Photo ${i + 1}</h4>
+              <button class="remove-btn" onclick="removeGalleryItem(${i})"><i data-lucide="trash-2"></i></button>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Image URL</label>
+                <input type="url" class="gallery-src" value="${img.src}" />
+              </div>
+              <div class="field">
+                <label>Alt Text</label>
+                <input type="text" class="gallery-alt" value="${img.alt}" />
+              </div>
+            </div>
+          </div>`;
+      });
+      lucide.createIcons({ nodes: list.querySelectorAll('[data-lucide]') });
+      lucide.createIcons({ nodes: preview.querySelectorAll('[data-lucide]') });
+    }
+    window.removeGalleryItem = (i) => { config.gallery.images.splice(i, 1); renderGalleryItems(); };
+
+    function collectGalleryItems() {
+      const srcs = document.querySelectorAll('#gallery-items-list .gallery-src');
+      const alts = document.querySelectorAll('#gallery-items-list .gallery-alt');
+      return Array.from(srcs).map((el, i) => ({ src: el.value, alt: alts[i].value }));
+    }
+
+    // Amenity categories
+    function renderAmenityCategories() {
+      const list = document.getElementById('amenities-categories-list');
+      list.innerHTML = '';
+      (config.amenities?.categories || []).forEach((cat, i) => {
+        list.innerHTML += `
+          <div class="card" data-index="${i}">
+            <div class="card-header">
+              <h4>${cat.name}</h4>
+              <button class="remove-btn" onclick="removeAmenityCategory(${i})"><i data-lucide="trash-2"></i></button>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Category Name</label>
+                <input type="text" class="amenity-cat-name" value="${cat.name}" />
+              </div>
+              <div class="field">
+                <label>Icon (home, utensils, bed, tree)</label>
+                <input type="text" class="amenity-cat-icon" value="${cat.icon}" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Items (one per line)</label>
+              <textarea class="amenity-cat-items">${(cat.items || []).join('\n')}</textarea>
+            </div>
+          </div>`;
+      });
+      lucide.createIcons({ nodes: list.querySelectorAll('[data-lucide]') });
+    }
+    window.removeAmenityCategory = (i) => { config.amenities.categories.splice(i, 1); renderAmenityCategories(); };
+
+    function collectAmenityCategories() {
+      const names = document.querySelectorAll('#amenities-categories-list .amenity-cat-name');
+      const icons = document.querySelectorAll('#amenities-categories-list .amenity-cat-icon');
+      const items = document.querySelectorAll('#amenities-categories-list .amenity-cat-items');
+      return Array.from(names).map((el, i) => ({
+        name: el.value,
+        icon: icons[i].value,
+        items: items[i].value.split('\n').map(s => s.trim()).filter(Boolean),
+      }));
+    }
+
+    // Location attractions
+    function renderLocationAttractions() {
+      const list = document.getElementById('location-attractions-list');
+      list.innerHTML = '';
+      (config.location?.nearbyAttractions || []).forEach((a, i) => {
+        list.innerHTML += `
+          <div class="card" data-index="${i}">
+            <div class="card-header">
+              <h4>${a.name}</h4>
+              <button class="remove-btn" onclick="removeLocationAttraction(${i})"><i data-lucide="trash-2"></i></button>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Name</label>
+                <input type="text" class="attraction-name" value="${a.name}" />
+              </div>
+              <div class="field">
+                <label>Distance</label>
+                <input type="text" class="attraction-distance" value="${a.distance}" />
+              </div>
+            </div>
+          </div>`;
+      });
+      lucide.createIcons({ nodes: list.querySelectorAll('[data-lucide]') });
+    }
+    window.removeLocationAttraction = (i) => { config.location.nearbyAttractions.splice(i, 1); renderLocationAttractions(); };
+
+    function collectLocationAttractions() {
+      const names = document.querySelectorAll('#location-attractions-list .attraction-name');
+      const dists = document.querySelectorAll('#location-attractions-list .attraction-distance');
+      return Array.from(names).map((el, i) => ({ name: el.value, distance: dists[i].value }));
+    }
+
+    // Reviews
+    function renderReviewItems() {
+      const list = document.getElementById('reviews-items-list');
+      list.innerHTML = '';
+      (config.reviews?.items || []).forEach((r, i) => {
+        list.innerHTML += `
+          <div class="card" data-index="${i}">
+            <div class="card-header">
+              <h4>${r.name}</h4>
+              <button class="remove-btn" onclick="removeReviewItem(${i})"><i data-lucide="trash-2"></i></button>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Guest Name</label>
+                <input type="text" class="review-name" value="${r.name}" />
+              </div>
+              <div class="field">
+                <label>Date</label>
+                <input type="text" class="review-date" value="${r.date}" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Rating (1-5)</label>
+              <input type="text" class="review-rating" value="${r.rating}" />
+            </div>
+            <div class="field">
+              <label>Review Text</label>
+              <textarea class="review-text">${r.text}</textarea>
+            </div>
+          </div>`;
+      });
+      lucide.createIcons({ nodes: list.querySelectorAll('[data-lucide]') });
+    }
+    window.removeReviewItem = (i) => { config.reviews.items.splice(i, 1); renderReviewItems(); };
+
+    function collectReviewItems() {
+      const names = document.querySelectorAll('#reviews-items-list .review-name');
+      const dates = document.querySelectorAll('#reviews-items-list .review-date');
+      const ratings = document.querySelectorAll('#reviews-items-list .review-rating');
+      const texts = document.querySelectorAll('#reviews-items-list .review-text');
+      return Array.from(names).map((el, i) => ({
+        name: el.value,
+        date: dates[i].value,
+        rating: parseInt(ratings[i].value) || 5,
+        text: texts[i].value,
+      }));
+    }
+
+    // Footer socials
+    function renderFooterSocials() {
+      const list = document.getElementById('footer-socials-list');
+      list.innerHTML = '';
+      (config.footer?.socialLinks || []).forEach((s, i) => {
+        list.innerHTML += `
+          <div class="card" data-index="${i}">
+            <div class="card-header">
+              <h4>${s.platform}</h4>
+              <button class="remove-btn" onclick="removeFooterSocial(${i})"><i data-lucide="trash-2"></i></button>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Platform (instagram, facebook)</label>
+                <input type="text" class="social-platform" value="${s.platform}" />
+              </div>
+              <div class="field">
+                <label>URL</label>
+                <input type="url" class="social-url" value="${s.url}" />
+              </div>
+            </div>
+          </div>`;
+      });
+      lucide.createIcons({ nodes: list.querySelectorAll('[data-lucide]') });
+    }
+    window.removeFooterSocial = (i) => { config.footer.socialLinks.splice(i, 1); renderFooterSocials(); };
+
+    function collectFooterSocials() {
+      const platforms = document.querySelectorAll('#footer-socials-list .social-platform');
+      const urls = document.querySelectorAll('#footer-socials-list .social-url');
+      return Array.from(platforms).map((el, i) => ({ platform: el.value, url: urls[i].value }));
+    }
+
+    // ── Add Buttons ───────────────────────────────────
+    function initAddButtons() {
+      document.getElementById('add-about-paragraph').addEventListener('click', () => {
+        config.about.paragraphs.push('');
+        renderAboutParagraphs();
+      });
+      document.getElementById('add-about-highlight').addEventListener('click', () => {
+        config.about.highlights.push({ icon: 'star', label: 'New Highlight' });
+        renderAboutHighlights();
+      });
+      document.getElementById('add-gallery-item').addEventListener('click', () => {
+        config.gallery.images.push({ src: '', alt: '' });
+        renderGalleryItems();
+      });
+      document.getElementById('add-amenity-category').addEventListener('click', () => {
+        config.amenities.categories.push({ name: 'New Category', icon: 'home', items: [] });
+        renderAmenityCategories();
+      });
+      document.getElementById('add-location-attraction').addEventListener('click', () => {
+        config.location.nearbyAttractions.push({ name: '', distance: '' });
+        renderLocationAttractions();
+      });
+      document.getElementById('add-review-item').addEventListener('click', () => {
+        config.reviews.items.unshift({ name: '', rating: 5, text: '', date: '' });
+        renderReviewItems();
+      });
+      document.getElementById('add-footer-social').addEventListener('click', () => {
+        config.footer.socialLinks.push({ platform: 'instagram', url: '' });
+        renderFooterSocials();
+      });
+    }
+
+    // ── Save Handler ──────────────────────────────────
+    async function handleSave() {
+      const btn = document.getElementById('save-btn');
+      btn.disabled = true;
+      showStatus('Saving and deploying...', 'saving', 0);
+
+      try {
+        collectFields();
+        await saveConfig();
+        showStatus('Saved! Site will update in ~30 seconds.', 'success', 5000);
+      } catch (err) {
+        showStatus(`Error: ${err.message}`, 'error', 6000);
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // ── Initialization ────────────────────────────────
+    async function init() {
+      lucide.createIcons();
+
+      const auth = getAuth();
+      if (auth) {
+        // Already authenticated — load config and show admin
+        try {
+          await loadConfig();
+          document.getElementById('setup-screen').style.display = 'none';
+          document.getElementById('admin-panel').style.display = '';
+          document.getElementById('view-site-link').href = `https://${auth.owner}.github.io/${auth.repo}/`;
+          populateFields();
+          initPanelNav();
+          initAddButtons();
+          document.getElementById('save-btn').addEventListener('click', handleSave);
+          document.getElementById('disconnect-btn').addEventListener('click', clearAuth);
+          lucide.createIcons();
+        } catch (err) {
+          clearAuth();
+        }
+      } else {
+        // Show setup screen
+        document.getElementById('setup-connect').addEventListener('click', async () => {
+          const owner = document.getElementById('setup-owner').value.trim();
+          const repo = document.getElementById('setup-repo').value.trim();
+          const token = document.getElementById('setup-token').value.trim();
+          const errEl = document.getElementById('setup-error');
+
+          if (!owner || !repo || !token) {
+            errEl.textContent = 'All fields are required.';
+            errEl.style.display = 'block';
+            return;
+          }
+
+          setAuth(owner, repo, token);
+          try {
+            await loadConfig();
+            location.reload();
+          } catch (err) {
+            errEl.textContent = `Connection failed: ${err.message}`;
+            errEl.style.display = 'block';
+            clearAuth();
+          }
+        });
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
