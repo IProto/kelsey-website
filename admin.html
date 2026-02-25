@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,7 +14,14 @@
 
   <style>
     /* ── Reset & Base ────────────────────────────────── */
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     :root {
       --bg: #0F1117;
       --bg-card: #1A1D27;
@@ -30,8 +38,16 @@
       --radius: 10px;
       --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
-    html { font-family: var(--font); background: var(--bg); color: var(--text); }
-    body { min-height: 100vh; }
+
+    html {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      min-height: 100vh;
+    }
 
     /* ── Layout ──────────────────────────────────────── */
     .admin-header {
@@ -45,6 +61,7 @@
       top: 0;
       z-index: 100;
     }
+
     .admin-header h1 {
       font-size: 1.1rem;
       font-weight: 600;
@@ -52,7 +69,10 @@
       align-items: center;
       gap: 0.5rem;
     }
-    .admin-header h1 span { color: var(--accent); }
+
+    .admin-header h1 span {
+      color: var(--accent);
+    }
 
     .header-actions {
       display: flex;
@@ -72,10 +92,12 @@
       border-right: 1px solid var(--border);
       padding: 1.5rem 0;
     }
+
     .sidebar-section {
       padding: 0 1rem;
       margin-bottom: 1.5rem;
     }
+
     .sidebar-label {
       font-size: 0.7rem;
       text-transform: uppercase;
@@ -84,6 +106,7 @@
       padding: 0 0.75rem;
       margin-bottom: 0.5rem;
     }
+
     .sidebar-link {
       display: flex;
       align-items: center;
@@ -101,9 +124,21 @@
       text-align: left;
       font-family: var(--font);
     }
-    .sidebar-link:hover { background: rgba(108,99,255,0.08); color: var(--text); }
-    .sidebar-link.active { background: rgba(108,99,255,0.15); color: var(--accent); }
-    .sidebar-link svg { width: 18px; height: 18px; }
+
+    .sidebar-link:hover {
+      background: rgba(108, 99, 255, 0.08);
+      color: var(--text);
+    }
+
+    .sidebar-link.active {
+      background: rgba(108, 99, 255, 0.15);
+      color: var(--accent);
+    }
+
+    .sidebar-link svg {
+      width: 18px;
+      height: 18px;
+    }
 
     /* ── Main Content ────────────────────────────────── */
     .main-content {
@@ -111,11 +146,13 @@
       max-width: 900px;
       overflow-y: auto;
     }
+
     .main-content h2 {
       font-size: 1.4rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
     }
+
     .main-content .section-desc {
       color: var(--text-muted);
       font-size: 0.9rem;
@@ -126,6 +163,7 @@
     .field {
       margin-bottom: 1.25rem;
     }
+
     .field label {
       display: block;
       font-size: 0.82rem;
@@ -133,6 +171,7 @@
       margin-bottom: 0.4rem;
       color: var(--text-muted);
     }
+
     .field input[type="text"],
     .field input[type="url"],
     .field input[type="email"],
@@ -149,10 +188,16 @@
       transition: border-color 200ms;
       outline: none;
     }
-    .field input:focus, .field textarea:focus {
+
+    .field input:focus,
+    .field textarea:focus {
       border-color: var(--border-focus);
     }
-    .field textarea { min-height: 80px; resize: vertical; }
+
+    .field textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
 
     .field-row {
       display: grid;
@@ -167,13 +212,24 @@
       gap: 0.75rem;
       margin-bottom: 1.25rem;
     }
-    .switch-field label { margin-bottom: 0; cursor: pointer; }
+
+    .switch-field label {
+      margin-bottom: 0;
+      cursor: pointer;
+    }
+
     .switch {
       position: relative;
       width: 44px;
       height: 24px;
     }
-    .switch input { opacity: 0; width: 0; height: 0; }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
     .switch .slider {
       position: absolute;
       cursor: pointer;
@@ -182,6 +238,7 @@
       border-radius: 24px;
       transition: 200ms;
     }
+
     .switch .slider::before {
       content: '';
       position: absolute;
@@ -193,8 +250,14 @@
       border-radius: 50%;
       transition: 200ms;
     }
-    .switch input:checked + .slider { background: var(--accent); }
-    .switch input:checked + .slider::before { transform: translateX(20px); }
+
+    .switch input:checked+.slider {
+      background: var(--accent);
+    }
+
+    .switch input:checked+.slider::before {
+      transform: translateX(20px);
+    }
 
     /* ── Cards & Lists ───────────────────────────────── */
     .card {
@@ -205,16 +268,19 @@
       margin-bottom: 1rem;
       position: relative;
     }
+
     .card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 1rem;
     }
+
     .card-header h4 {
       font-size: 0.95rem;
       font-weight: 500;
     }
+
     .card .remove-btn {
       background: none;
       border: none;
@@ -225,15 +291,22 @@
       display: flex;
       align-items: center;
     }
-    .card .remove-btn:hover { background: rgba(248,113,113,0.1); }
-    .card .remove-btn svg { width: 16px; height: 16px; }
+
+    .card .remove-btn:hover {
+      background: rgba(248, 113, 113, 0.1);
+    }
+
+    .card .remove-btn svg {
+      width: 16px;
+      height: 16px;
+    }
 
     .add-btn {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
       padding: 0.55rem 1rem;
-      background: rgba(108,99,255,0.1);
+      background: rgba(108, 99, 255, 0.1);
       border: 1.5px dashed var(--accent);
       border-radius: var(--radius);
       color: var(--accent);
@@ -243,8 +316,15 @@
       font-weight: 500;
       transition: all 150ms;
     }
-    .add-btn:hover { background: rgba(108,99,255,0.2); }
-    .add-btn svg { width: 16px; height: 16px; }
+
+    .add-btn:hover {
+      background: rgba(108, 99, 255, 0.2);
+    }
+
+    .add-btn svg {
+      width: 16px;
+      height: 16px;
+    }
 
     /* ── Buttons ──────────────────────────────────────── */
     .btn {
@@ -260,25 +340,45 @@
       align-items: center;
       gap: 0.4rem;
     }
-    .btn svg { width: 16px; height: 16px; }
+
+    .btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
     .btn-primary {
       background: var(--accent);
       color: #fff;
     }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .btn-secondary {
-      background: rgba(255,255,255,0.06);
+      background: rgba(255, 255, 255, 0.06);
       color: var(--text);
       border: 1px solid var(--border);
     }
-    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
-    .btn-danger {
-      background: rgba(248,113,113,0.1);
-      color: var(--danger);
-      border: 1px solid rgba(248,113,113,0.2);
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
     }
-    .btn-danger:hover { background: rgba(248,113,113,0.2); }
+
+    .btn-danger {
+      background: rgba(248, 113, 113, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(248, 113, 113, 0.2);
+    }
+
+    .btn-danger:hover {
+      background: rgba(248, 113, 113, 0.2);
+    }
 
     /* ── Status / Toast ──────────────────────────────── */
     .status-bar {
@@ -294,17 +394,46 @@
       gap: 0.5rem;
       z-index: 1000;
       animation: slideUp 300ms ease;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
-    .status-bar.show { display: flex; }
-    .status-bar.success { background: #064E3B; color: var(--success); border: 1px solid rgba(52,211,153,0.3); }
-    .status-bar.error { background: #450A0A; color: var(--danger); border: 1px solid rgba(248,113,113,0.3); }
-    .status-bar.saving { background: #1E1B4B; color: var(--accent); border: 1px solid rgba(108,99,255,0.3); }
-    .status-bar svg { width: 18px; height: 18px; }
+
+    .status-bar.show {
+      display: flex;
+    }
+
+    .status-bar.success {
+      background: #064E3B;
+      color: var(--success);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .status-bar.error {
+      background: #450A0A;
+      color: var(--danger);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+    }
+
+    .status-bar.saving {
+      background: #1E1B4B;
+      color: var(--accent);
+      border: 1px solid rgba(108, 99, 255, 0.3);
+    }
+
+    .status-bar svg {
+      width: 18px;
+      height: 18px;
+    }
 
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* ── Setup Screen ────────────────────────────────── */
@@ -315,6 +444,7 @@
       min-height: 100vh;
       padding: 2rem;
     }
+
     .setup-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -323,28 +453,44 @@
       max-width: 520px;
       width: 100%;
     }
+
     .setup-card h2 {
       font-size: 1.4rem;
       margin-bottom: 0.5rem;
     }
+
     .setup-card .setup-desc {
       color: var(--text-muted);
       font-size: 0.9rem;
       margin-bottom: 1.5rem;
       line-height: 1.6;
     }
-    .setup-card .field { margin-bottom: 1rem; }
-    .setup-card .btn { width: 100%; justify-content: center; margin-top: 0.5rem; }
+
+    .setup-card .field {
+      margin-bottom: 1rem;
+    }
+
+    .setup-card .btn {
+      width: 100%;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+
     .setup-card .help-text {
       font-size: 0.78rem;
       color: var(--text-muted);
       margin-top: 1rem;
       line-height: 1.6;
     }
-    .setup-card .help-text a { color: var(--accent); text-decoration: underline; }
+
+    .setup-card .help-text a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
     .setup-error {
-      background: rgba(248,113,113,0.1);
-      border: 1px solid rgba(248,113,113,0.2);
+      background: rgba(248, 113, 113, 0.1);
+      border: 1px solid rgba(248, 113, 113, 0.2);
       border-radius: 8px;
       padding: 0.65rem 0.85rem;
       color: var(--danger);
@@ -354,8 +500,13 @@
     }
 
     /* ── Section panel visibility ─────────────────────── */
-    .panel { display: none; }
-    .panel.active { display: block; }
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
 
     /* ── Gallery image previews ───────────────────────── */
     .gallery-preview {
@@ -364,6 +515,7 @@
       gap: 0.75rem;
       margin-bottom: 1rem;
     }
+
     .gallery-preview-item {
       position: relative;
       border-radius: 8px;
@@ -372,16 +524,18 @@
       background: var(--bg-input);
       border: 1px solid var(--border);
     }
+
     .gallery-preview-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+
     .gallery-preview-item .remove-btn {
       position: absolute;
       top: 4px;
       right: 4px;
-      background: rgba(0,0,0,0.7);
+      background: rgba(0, 0, 0, 0.7);
       border-radius: 50%;
       width: 24px;
       height: 24px;
@@ -395,6 +549,7 @@
       display: flex;
       gap: 2px;
     }
+
     .star-rating button {
       background: none;
       border: none;
@@ -403,17 +558,34 @@
       color: var(--border);
       transition: color 100ms;
     }
-    .star-rating button.filled { color: #F5A623; }
-    .star-rating button svg { width: 18px; height: 18px; fill: currentColor; }
+
+    .star-rating button.filled {
+      color: #F5A623;
+    }
+
+    .star-rating button svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
 
     /* ── Responsive ──────────────────────────────────── */
     @media (max-width: 768px) {
-      .admin-layout { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-      .main-content { padding: 1.5rem; }
+      .admin-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .main-content {
+        padding: 1.5rem;
+      }
     }
   </style>
 </head>
+
 <body>
 
   <!-- ── Setup Screen (shown until token is configured) ── -->
@@ -442,7 +614,8 @@
       </button>
       <p class="help-text">
         You need a GitHub Personal Access Token with <strong>repo</strong> scope.
-        <a href="https://github.com/settings/tokens/new?description=kelsey-website-admin&scopes=repo" target="_blank">Create one here →</a><br />
+        <a href="https://github.com/settings/tokens/new?description=kelsey-website-admin&scopes=repo"
+          target="_blank">Create one here →</a><br />
         The token is stored only in your browser's localStorage and never sent anywhere other than GitHub's API.
       </p>
     </div>
@@ -754,10 +927,26 @@
       return res.json();
     }
 
+    // UTF-8 safe base64 decode
+    function b64DecodeUTF8(base64) {
+      const binary = atob(base64.replace(/\n/g, ''));
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new TextDecoder('utf-8').decode(bytes);
+    }
+
+    // UTF-8 safe base64 encode
+    function b64EncodeUTF8(str) {
+      const bytes = new TextEncoder().encode(str);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      return btoa(binary);
+    }
+
     async function loadConfig() {
       const data = await githubFetch(`contents/${CONFIG_PATH}?ref=main`);
       fileSha = data.sha;
-      const content = atob(data.content.replace(/\n/g, ''));
+      const content = b64DecodeUTF8(data.content);
       // Parse the config from the JS file content
       const match = content.match(/const\s+SITE_CONFIG\s*=\s*(\{[\s\S]*\});?\s*$/);
       if (!match) throw new Error('Could not parse SITE_CONFIG from file');
@@ -769,7 +958,7 @@
     async function saveConfig() {
       const auth = getAuth();
       const jsContent = `const SITE_CONFIG = ${JSON.stringify(config, null, 2)};\n`;
-      const encoded = btoa(unescape(encodeURIComponent(jsContent)));
+      const encoded = b64EncodeUTF8(jsContent);
 
       const data = await githubFetch(`contents/${CONFIG_PATH}`, {
         method: 'PUT',
@@ -1294,4 +1483,5 @@
     init();
   </script>
 </body>
+
 </html>
