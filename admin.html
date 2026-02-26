@@ -830,6 +830,7 @@
         <div class="sidebar__actions">
           <button class="btn btn--success btn--full" id="save-btn"><i data-lucide="upload-cloud"></i> Save &amp;
             Deploy</button>
+          <button class="btn btn--primary btn--full" id="preview-btn"><i data-lucide="eye"></i> Preview Changes</button>
           <a class="btn btn--outline btn--full" id="view-site-link" href="#" target="_blank"><i
               data-lucide="external-link"></i> View Live Site</a>
           <button class="btn btn--outline btn--full" id="disconnect-btn"><i data-lucide="log-out"></i>
@@ -838,8 +839,9 @@
       </aside>
 
       <main class="main">
-        <div class="preview-bar"><i data-lucide="info"></i> Make your changes, then click <strong>Save &amp;
-            Deploy</strong>. Changes go live in ~30 seconds.</div>
+        <div class="preview-bar"><i data-lucide="info"></i> Make changes, click <strong>Preview</strong> to test, then
+          <strong>Save &amp; Deploy</strong> to publish. Changes go live in ~30 seconds.
+        </div>
 
         <!-- General -->
         <div class="tab-panel active" id="tab-general">
@@ -893,11 +895,10 @@
             </div>
           </div>
           <div class="card">
-            <div class="card__title"><i data-lucide="image"></i> Background Image</div>
-            <div class="form-group"><label class="form-label" for="heroBackgroundImage">Image URL</label><input
-                class="form-input" type="url" id="heroBackgroundImage" />
-              <p class="form-hint">Use a high-resolution landscape photo.</p>
-            </div>
+            <div class="card__title"><i data-lucide="image"></i> Carousel Images</div>
+            <p class="form-hint" style="margin-bottom:.75rem">These images rotate in the hero background. Use
+              high-resolution landscape photos.</p>
+            <div class="image-list" id="hero-images"></div>
           </div>
           <div class="card">
             <div class="form-group"><label class="form-label" for="heroHeadline">Headline</label><input
@@ -1164,7 +1165,9 @@
       document.getElementById('bannerMessage').value = C.banner?.message || '';
       document.getElementById('bannerLinkText').value = C.banner?.linkText || '';
       document.getElementById('bannerLink').value = C.banner?.link || '';
-      document.getElementById('heroBackgroundImage').value = C.hero?.backgroundImage || '';
+      // Render hero carousel images
+      const heroImages = Array.isArray(C.hero?.images) ? C.hero.images : (C.hero?.backgroundImage ? [C.hero.backgroundImage] : []);
+      renderHeroImages(heroImages);
       document.getElementById('heroHeadline').value = C.hero?.headline || '';
       document.getElementById('heroSubheadline').value = C.hero?.subheadline || '';
       document.getElementById('heroCtaText').value = C.hero?.ctaText || '';
@@ -1202,7 +1205,7 @@
       config = {
         propertyName: val('propertyName'), tagline: val('tagline'),
         banner: { enabled: document.getElementById('bannerEnabled').checked, message: val('bannerMessage'), linkText: val('bannerLinkText'), link: val('bannerLink') },
-        hero: { backgroundImage: val('heroBackgroundImage'), headline: val('heroHeadline'), subheadline: val('heroSubheadline'), ctaText: val('heroCtaText'), ctaLink: val('heroCtaLink') },
+        hero: { backgroundImage: gatherHeroImages()[0] || '', images: gatherHeroImages(), headline: val('heroHeadline'), subheadline: val('heroSubheadline'), ctaText: val('heroCtaText'), ctaLink: val('heroCtaLink') },
         about: { title: val('aboutTitle'), paragraphs: gatherListTextareas('about-paragraphs'), highlights: gatherHighlights(), image: val('aboutImage') },
         gallery: { title: val('galleryTitle'), images: gatherGalleryImages() },
         amenities: { title: val('amenitiesTitle'), categories: gatherAmenityCategories() },
@@ -1222,12 +1225,37 @@
       try {
         gatherConfig();
         await saveConfigToGitHub();
+        // Clear any preview draft since we've published
+        localStorage.removeItem('SITE_CONFIG_DRAFT');
         showToast('✓ Saved! Site updates in ~30 seconds.', 'success');
       } catch (err) {
         showToast('Error: ' + err.message, 'error');
         console.error(err);
       } finally { btn.disabled = false; }
     }
+
+    // ── Preview ──────────────────────────────────────────────
+    function previewSite() {
+      gatherConfig();
+      const js = 'const SITE_CONFIG = ' + JSON.stringify(config, null, 2) + ';\n';
+      localStorage.setItem('SITE_CONFIG_DRAFT', js);
+      window.open('index.html', '_blank');
+      showToast('Preview opened — changes are NOT saved yet.', '');
+    }
+
+    // ── Hero Images ─────────────────────────────────────────
+    function renderHeroImages(images) {
+      const c = document.getElementById('hero-images');
+      c.innerHTML = '';
+      images.forEach((src, i) => {
+        c.innerHTML += `<div class="image-card"><img src="${src}" alt="Hero slide ${i + 1}" /><div class="image-card__overlay"><button class="image-card__remove" onclick="removeHeroImage(${i})"><i data-lucide="trash-2"></i></button></div></div>`;
+      });
+      c.innerHTML += `<div class="image-card image-card--add" onclick="addHeroImage()"><i data-lucide="plus"></i> Add Slide</div>`;
+      lucide.createIcons({ nameAttr: 'data-lucide' });
+    }
+    function addHeroImage() { const src = prompt('Image URL:'); if (!src) return; const imgs = gatherHeroImages(); imgs.push(src); renderHeroImages(imgs); }
+    function removeHeroImage(i) { const imgs = gatherHeroImages(); imgs.splice(i, 1); renderHeroImages(imgs); }
+    function gatherHeroImages() { return [...document.querySelectorAll('#hero-images .image-card:not(.image-card--add) img')].map(img => img.src); }
 
     // ── Gallery Images ───────────────────────────────────────
     function renderGalleryImages(images) {
@@ -1347,6 +1375,7 @@
           document.getElementById('view-site-link').href = `https://${auth.owner}.github.io/${auth.repo}/`;
           populateFields();
           document.getElementById('save-btn').addEventListener('click', handleSave);
+          document.getElementById('preview-btn').addEventListener('click', previewSite);
           document.getElementById('disconnect-btn').addEventListener('click', clearAuth);
           lucide.createIcons();
         } catch (err) { console.error(err); clearAuth(); }

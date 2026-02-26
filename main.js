@@ -4,7 +4,22 @@
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-  const C = SITE_CONFIG;
+  // Check for a draft config from the admin panel preview
+  let C = SITE_CONFIG;
+  const draft = localStorage.getItem('SITE_CONFIG_DRAFT');
+  if (draft) {
+    try {
+      C = (new Function(draft + '; return SITE_CONFIG;'))();
+      // Clear banner dismissal so it shows during preview
+      sessionStorage.removeItem('banner-dismissed');
+      // Show preview bar at bottom of page so it doesn't cover the banner
+      const bar = document.createElement('div');
+      bar.id = 'preview-bar';
+      bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:10000;background:#4F46E5;color:#fff;text-align:center;padding:10px 16px;font-family:Inter,sans-serif;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 -4px 12px rgba(0,0,0,0.15);';
+      bar.innerHTML = '👁 Previewing unsaved changes. <button onclick="localStorage.removeItem(\'SITE_CONFIG_DRAFT\');location.reload()" style="background:#fff;color:#4F46E5;border:none;padding:4px 12px;border-radius:4px;font-weight:600;cursor:pointer;font-size:13px">Exit Preview</button>';
+      document.body.prepend(bar);
+    } catch (e) { console.warn('Failed to load draft config:', e); }
+  }
 
   // ── Icon map (Lucide icon names) ────────────────────────────
   const ICON_MAP = {
